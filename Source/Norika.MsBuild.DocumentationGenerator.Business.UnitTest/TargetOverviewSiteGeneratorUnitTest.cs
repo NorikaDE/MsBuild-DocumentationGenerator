@@ -165,8 +165,10 @@ namespace Norika.MsBuild.DocumentationGenerator.Business.UnitTest
                 new Mock<IPrintableDocumentChapterStringContent>();
             chapterContentMock.SetupSet(cc => cc.Content = It.IsAny<string>()).Verifiable();
 
+            Mock<IPrintableDocumentParagraph> paragraphMock = new Mock<IPrintableDocumentParagraph>();
             Mock<IPrintableDocumentChapter> chapterMock = new Mock<IPrintableDocumentChapter>();
-            chapterMock.Setup(c => c.AddNewContent<IPrintableDocumentChapterStringContent>())
+            chapterMock.Setup(c => c.AddNewParagraph(It.IsAny<string>())).Returns(paragraphMock.Object);
+            paragraphMock.Setup(p => p.AddNewContent<IPrintableDocumentChapterStringContent>())
                 .Returns(chapterContentMock.Object);
 
             Mock<IMarkdownDocument> markdownDocumentMock = new Mock<IMarkdownDocument>();
@@ -188,11 +190,11 @@ namespace Norika.MsBuild.DocumentationGenerator.Business.UnitTest
             IPrintableDocument document = markdownTargetDocumentGenerator.CreateOverview(targetMock.Object);
 
             // 3) Assert
-            markdownDocumentMock.Verify(
-                md => md.AddNewChapter(It.Is<string>(s => s.Equals("Parameter $(ParamPropertyOne)"))),
+            chapterMock.Verify(
+                cm => cm.AddNewParagraph(It.Is<string>(s => s.Equals("Parameter $(ParamPropertyOne)"))),
                 Times.Exactly(1));
-            markdownDocumentMock.Verify(
-                md => md.AddNewChapter(It.Is<string>(s => s.Equals("Parameter $(ParamPropertyTwo)"))),
+            chapterMock.Verify(
+                cm => cm.AddNewParagraph(It.Is<string>(s => s.Equals("Parameter $(ParamPropertyTwo)"))),
                 Times.Exactly(1));
         }
 
@@ -219,8 +221,10 @@ namespace Norika.MsBuild.DocumentationGenerator.Business.UnitTest
                 new Mock<IPrintableDocumentChapterStringContent>();
             chapterContentMock.SetupSet(cc => cc.Content = It.IsAny<string>()).Verifiable();
 
+            Mock<IPrintableDocumentParagraph> paragraphMock = new Mock<IPrintableDocumentParagraph>();
             Mock<IPrintableDocumentChapter> chapterMock = new Mock<IPrintableDocumentChapter>();
-            chapterMock.Setup(c => c.AddNewContent<IPrintableDocumentChapterStringContent>())
+            chapterMock.Setup(c => c.AddNewParagraph(It.IsAny<string>())).Returns(paragraphMock.Object);
+            paragraphMock.Setup(p => p.AddNewContent<IPrintableDocumentChapterStringContent>())
                 .Returns(chapterContentMock.Object);
 
             Mock<IMarkdownDocument> markdownDocumentMock = new Mock<IMarkdownDocument>();
@@ -242,7 +246,7 @@ namespace Norika.MsBuild.DocumentationGenerator.Business.UnitTest
             IPrintableDocument document = markdownTargetDocumentGenerator.CreateOverview(targetMock.Object);
 
             // 3) Assert
-            chapterMock.Verify(c => c.AddNewContent<IPrintableDocumentChapterStringContent>(), Times.Exactly(2));
+            paragraphMock.Verify(p => p.AddNewContent<IPrintableDocumentChapterStringContent>(), Times.Exactly(2));
         }
 
 
@@ -269,8 +273,10 @@ namespace Norika.MsBuild.DocumentationGenerator.Business.UnitTest
                 new Mock<IPrintableDocumentChapterStringContent>();
             chapterContentMock.SetupSet(cc => cc.Content = It.IsAny<string>()).Verifiable();
 
+            Mock<IPrintableDocumentParagraph> paragraphMock = new Mock<IPrintableDocumentParagraph>();
             Mock<IPrintableDocumentChapter> chapterMock = new Mock<IPrintableDocumentChapter>();
-            chapterMock.Setup(c => c.AddNewContent<IPrintableDocumentChapterStringContent>())
+            chapterMock.Setup(c => c.AddNewParagraph(It.IsAny<string>())).Returns(paragraphMock.Object);
+            paragraphMock.Setup(p => p.AddNewContent<IPrintableDocumentChapterStringContent>())
                 .Returns(chapterContentMock.Object);
 
             Mock<IMarkdownDocument> markdownDocumentMock = new Mock<IMarkdownDocument>();
@@ -321,8 +327,10 @@ namespace Norika.MsBuild.DocumentationGenerator.Business.UnitTest
                 new Mock<IPrintableDocumentChapterStringContent>();
             chapterContentMock.SetupSet(cc => cc.Content = It.IsAny<string>()).Verifiable();
 
+            Mock<IPrintableDocumentParagraph> paragraphMock = new Mock<IPrintableDocumentParagraph>();
             Mock<IPrintableDocumentChapter> chapterMock = new Mock<IPrintableDocumentChapter>();
-            chapterMock.Setup(c => c.AddNewContent<IPrintableDocumentChapterStringContent>())
+            chapterMock.Setup(c => c.AddNewParagraph(It.IsAny<string>())).Returns(paragraphMock.Object);
+            paragraphMock.Setup(p => p.AddNewContent<IPrintableDocumentChapterStringContent>())
                 .Returns(chapterContentMock.Object);
 
             Mock<IMarkdownDocument> markdownDocumentMock = new Mock<IMarkdownDocument>();

@@ -220,7 +220,8 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
         private void AppendErrorHandlingSection(IPrintableDocument targetOverviewDocument,
             IMsBuildTarget target)
         {
-            if (target.OnErrorTargets.Count == 0) return;
+            if (target.OnErrorTargets == null ||
+                target.OnErrorTargets?.Count == 0) return;
 
             IPrintableDocumentChapter errorHandlingChapter =
                 targetOverviewDocument.AddNewChapter("Error Handling");

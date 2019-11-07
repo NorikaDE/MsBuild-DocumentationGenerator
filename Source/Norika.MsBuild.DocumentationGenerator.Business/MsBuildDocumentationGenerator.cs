@@ -15,12 +15,12 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
     /// Documentation generator for MsBuild files
     /// </summary>
     /// <typeparam name="T">Output documentation type.</typeparam>
-    public class Generator<T> where T : IPrintableDocument
+    public class MsBuildDocumentationGenerator<T> where T : IPrintableDocument
     {
         /// <summary>
         /// Path of the file for which the documentation should be created. 
         /// </summary>
-        private readonly string _filePath;
+        private string _filePath;
 
         /// <summary>
         /// Builder for the output document. 
@@ -31,10 +31,26 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
         /// Constructor
         /// </summary>
         /// <param name="filePath">Path of the file for which the documentation should be created</param>
-        public Generator(string filePath)
+        public MsBuildDocumentationGenerator(string filePath) : this()
         {
             _filePath = filePath;
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public MsBuildDocumentationGenerator()
+        {
             _printableDocument = new PrintableDocument<T>();
+        }
+
+        /// <summary>
+        /// Sets the project file to generate the documentation from
+        /// </summary>
+        /// <param name="filePath"></param>
+        public void SetProjectFile(string filePath)
+        {
+            _filePath = filePath;
         }
 
         /// <summary>

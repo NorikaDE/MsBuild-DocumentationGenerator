@@ -141,8 +141,8 @@ namespace Norika.MsBuild.DocumentationGenerator.Business.UnitTest
             fileMock.Setup(fm => fm.FullPath).Returns("test/Test.target");
             fileMock.Setup(fm => fm.ReadAllText()).Returns(resourceContent);
 
-            ProjectOverviewGenerator<MarkdownDocument> documentationGenerator =
-                new ProjectOverviewGenerator<MarkdownDocument>(fileMock.Object);
+            ProjectOverviewGenerator<IMarkdownDocument> documentationGenerator =
+                new ProjectOverviewGenerator<IMarkdownDocument>(fileMock.Object);
             documentationGenerator.CreateBody();
 
             string returnValue = documentationGenerator.Print();
@@ -160,8 +160,8 @@ namespace Norika.MsBuild.DocumentationGenerator.Business.UnitTest
             fileMock.Setup(fm => fm.FullPath).Returns("test/Test.target");
             fileMock.Setup(fm => fm.ReadAllText()).Returns(resourceContent);
 
-            ProjectOverviewGenerator<MarkdownDocument> documentationGenerator =
-                new ProjectOverviewGenerator<MarkdownDocument>(fileMock.Object);
+            ProjectOverviewGenerator<IMarkdownDocument> documentationGenerator =
+                new ProjectOverviewGenerator<IMarkdownDocument>(fileMock.Object);
             documentationGenerator.CreateBody();
 
             string returnValue = documentationGenerator.Print();
@@ -179,8 +179,8 @@ namespace Norika.MsBuild.DocumentationGenerator.Business.UnitTest
             fileMock.Setup(fm => fm.FullPath).Returns("test/Test.target");
             fileMock.Setup(fm => fm.ReadAllText()).Returns(resourceContent);
 
-            ProjectOverviewGenerator<MarkdownDocument> documentationGenerator =
-                new ProjectOverviewGenerator<MarkdownDocument>(fileMock.Object);
+            ProjectOverviewGenerator<IMarkdownDocument> documentationGenerator =
+                new ProjectOverviewGenerator<IMarkdownDocument>(fileMock.Object);
             documentationGenerator.CreateBody();
 
             string returnValue = documentationGenerator.Print();
