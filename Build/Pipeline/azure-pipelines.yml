@@ -1,0 +1,73 @@
+# ASP.NET
+# Build and test ASP.NET projects.
+# Add steps that publish symbols, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
+
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  runSettings: 'Settings/UnitTest.runsettings'
+  rootNameSpace: 'Norika.MsBuild.DocumentationGenerator'
+  packgeVersion: "0.1.0-alpha$(Build.BuildId)"
+
+steps:
+- task: NuGetToolInstaller@1
+  displayName: Install NuGet Tools
+
+- task: NuGetCommand@2
+  displayName: Restoring NuGet Packages
+  inputs:
+    restoreSolution: '$(solution)'
+
+- task: VSBuild@1
+  displayName: Build Projects
+  inputs:
+    solution: '$(solution)'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: CopyFiles@2
+  displayName: 'Commissioning Binaries'
+  inputs:
+    SourceFolder: '$(Agent.BuildDirectory)'
+    Contents: '**/bin/$(buildConfiguration)/**/$(rootNameSpace)*.dll'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/Binaries'
+    flattenFolders: true
+    
+- task: DotNetCoreCLI@2
+  displayName: Run Tests
+  continueOnError: false
+  inputs:
+    command: test
+    projects: '**/*UnitTests/*.csproj'
+    arguments: '--configuration $(buildConfiguration) --collect "Code coverage" --settings "$(runSettings)"'
+
+- task: DotNetCoreCLI@2
+  displayName: Pack NuGet Packages
+  inputs:
+    command: 'pack'
+    packagesToPack: '**/*.csproj'
+    packDirectory: '$(Build.ArtifactStagingDirectory)/Packages'
+    nobuild: true
+    versioningScheme: 'byEnvVar'
+    versionEnvVar: 'packgeVersion'
+
+- task: PublishBuildArtifacts@1
+  displayName: Copy To Drop Binaries
+  inputs:
+    ArtifactName: Binaries
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/Binaries'
+
+- task: PublishBuildArtifacts@1
+  displayName: Copy To Drop Packages
+  inputs:
+    ArtifactName: Packages
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/Packages'
