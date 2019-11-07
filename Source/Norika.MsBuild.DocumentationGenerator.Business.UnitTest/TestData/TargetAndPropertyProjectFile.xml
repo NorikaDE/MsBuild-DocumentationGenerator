@@ -1,0 +1,52 @@
+<Project InitialTargets="StartTarget">
+
+    <!-- Private Member -->
+    <PropertyGroup>
+        <!-- Test property numbery 1 -->
+        <Property1>1</Property1>
+        <!-- Test Property with condition
+        and multiline comment -->
+        <Property2 Condition="'$(Test)' == 'true'">2</Property2>
+        <!-- Property with property as content -->
+        <Property3>$(Property1)</Property3>
+    </PropertyGroup>
+
+    <!-- Public setter member -->
+    <PropertyGroup>
+        <!-- Property with simple overwrite -->
+        <Property4>$(Property4)</Property4>
+        <!-- Property with additional overwrite -->
+        <Property5>$(Property5) with additional.</Property5>
+        <!-- Property with conditional overwrite for default value -->
+        <Property6 Condition="$(Property6) == ''">Default Value</Property6>
+    </PropertyGroup>
+
+    <!--
+        .SYNOPSIS
+         Entry target when file is started without specified target.
+        
+        .DESCRIPTION
+         Nothing relevant.
+    -->
+    <Target Name="StartTarget" DependsOnTarget="InitializeProperties">
+        <Message Text="$(Property1)"/>
+    </Target>
+
+    <!--
+        .SYNOPSIS
+         Initializes the required properties for execution.
+         
+        .DESCRIPTION
+         Initializes the required properties for execution
+         
+        .RETURNS
+         Required properties.
+    -->
+    <Target Name="InitializeProperties">
+        <PropertyGroup>
+            <Property1>A</Property1>
+            <Property2>B</Property2>
+        </PropertyGroup>
+    </Target>
+
+</Project>

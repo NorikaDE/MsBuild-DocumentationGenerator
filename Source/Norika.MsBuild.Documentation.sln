@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Norika.MsBuild.DocumentationGenerator.Business.IntegrationTest", "Norika.MsBuild.DocumentationGenerator.Business.IntegrationTest\Norika.MsBuild.DocumentationGenerator.Business.IntegrationTest.csproj", "{77562D33-F050-4F1A-B49C-D902B3187BDA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Norika.MsBuild.DocumentationGenerator.Business", "Norika.MsBuild.DocumentationGenerator.Business\Norika.MsBuild.DocumentationGenerator.Business.csproj", "{5EDB0EFE-A857-4555-8AEA-FA421BE38F6E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Norika.MsBuild.DocumentationGenerator.Business.UnitTest", "Norika.MsBuild.DocumentationGenerator.Business.UnitTest\Norika.MsBuild.DocumentationGenerator.Business.UnitTest.csproj", "{D9127E2C-9656-48B5-8924-4FF5D04E9109}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+	
+		{77562D33-F050-4F1A-B49C-D902B3187BDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77562D33-F050-4F1A-B49C-D902B3187BDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77562D33-F050-4F1A-B49C-D902B3187BDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77562D33-F050-4F1A-B49C-D902B3187BDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EDB0EFE-A857-4555-8AEA-FA421BE38F6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EDB0EFE-A857-4555-8AEA-FA421BE38F6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EDB0EFE-A857-4555-8AEA-FA421BE38F6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EDB0EFE-A857-4555-8AEA-FA421BE38F6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9127E2C-9656-48B5-8924-4FF5D04E9109}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9127E2C-9656-48B5-8924-4FF5D04E9109}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9127E2C-9656-48B5-8924-4FF5D04E9109}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9127E2C-9656-48B5-8924-4FF5D04E9109}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+	EndGlobalSection
+EndGlobal

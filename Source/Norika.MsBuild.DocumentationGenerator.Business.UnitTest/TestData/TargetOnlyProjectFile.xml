@@ -1,0 +1,31 @@
+<Project InitialTargets="StartTarget">
+
+    <!--
+        .SYNOPSIS
+         Entry target when file is started without specified target.
+        
+        .DESCRIPTION
+         Nothing relevant.
+    -->
+    <Target Name="StartTarget" DependsOnTarget="InitializeProperties">
+        <Message Text="$(Property1)"/>
+    </Target>
+
+    <!--
+        .SYNOPSIS
+         Initializes the required properties for execution.
+         
+        .DESCRIPTION
+         Initializes the required properties for execution
+         
+        .RETURNS
+         Required properties.
+    -->
+    <Target Name="InitializeProperties">
+        <PropertyGroup>
+            <Property1>A</Property1>
+            <Property2>B</Property2>
+        </PropertyGroup>
+    </Target>
+
+</Project>
