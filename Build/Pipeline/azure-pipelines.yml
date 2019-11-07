@@ -47,7 +47,7 @@ steps:
   continueOnError: false
   inputs:
     command: test
-    projects: '**/*UnitTests/*.csproj'
+    projects: '**/*UnitTest/*.csproj'
     arguments: '--configuration $(buildConfiguration) --collect "Code coverage" --settings "$(runSettings)"'
 
 - task: DotNetCoreCLI@2
