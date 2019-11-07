@@ -6,10 +6,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Norika.Documentation.Core"/>
-        <PackageReference Include="Norika.Documentation.Core.Types"/>
-        <PackageReference Include="Norika.MsBuild.Core.Data"/>
-        <PackageReference Include="Norika.MsBuild.Model"/>
+        <PackageReference Include="Norika.Documentation.Core" Version="0.1.0-alpha*" />
+        <PackageReference Include="Norika.Documentation.Core.Types" Version="0.1.0-alpha*" />
+        <PackageReference Include="Norika.MsBuild.Core.Data" Version="0.1.0-alpha*" />
+        <PackageReference Include="Norika.MsBuild.Model" Version="0.1.0-alpha*" />
     </ItemGroup>
 
 </Project>
