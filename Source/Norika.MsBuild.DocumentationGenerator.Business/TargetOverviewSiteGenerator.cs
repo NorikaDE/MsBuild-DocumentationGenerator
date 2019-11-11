@@ -20,7 +20,6 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
         /// </summary>
         private readonly PrintableDocument<T> _printableDocument;
 
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -37,7 +36,6 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
         {
             _printableDocument = new PrintableDocument<T>();
         }
-
 
         /// <summary>
         /// Creates the documentation body content for the given MsBuild target
@@ -57,7 +55,6 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
 
             return targetOverviewDocument;
         }
-
 
         /// <summary>
         /// Append a section to the documentation containing the targets description by using
@@ -81,7 +78,6 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
 
             descriptionChapterContent.Content = string.Join(Environment.NewLine, descriptionContent);
         }
-
 
         /// <summary>
         /// Append a section to the documentation containing the targets parameters by using the
@@ -112,7 +108,6 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
             }
         }
 
-
         /// <summary>
         /// Append a section to the documentation containing the targets outputs by using the
         /// xml based help. Therefore the help section "Outputs" is used.
@@ -139,7 +134,6 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
                 outputsSectionBody.Content = outputsHelpParagraph.Content;
             }
         }
-
 
         /// <summary>
         /// Append a section to the documentation containing the targets dependencies by using the
@@ -209,7 +203,6 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
                 exampleCodeBlock.SetLanguage(codeBlock.Language.ToString());
             }
         }
-
 
         /// <summary>
         /// Append a section to the documentation containing the targets error handling by using the

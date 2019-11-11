@@ -69,7 +69,6 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
             CreateTargetDocumentation(outputPath, msBuildProject.GetChildren<IMsBuildTarget>());
         }
 
-
         /// <summary>
         /// Creates the documentation overview for the given MsBuild project and stores it
         /// into the given output directory. 
@@ -98,7 +97,6 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
                 throw new IOException("The documentation could not be saved.");
         }
 
-
         /// <summary>
         /// Creates the documentation for each of the given targets. 
         /// </summary>
@@ -121,7 +119,6 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
             });
         }
 
-
         /// <summary>
         /// Saves the created target documentation to the given output directory by creating
         /// a sub directory named like the target.
@@ -141,7 +138,6 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
                 throw new IOException("File could not be saved!");
             }
         }
-
 
         /// <summary>
         /// Prepares the output directory for the documentation.

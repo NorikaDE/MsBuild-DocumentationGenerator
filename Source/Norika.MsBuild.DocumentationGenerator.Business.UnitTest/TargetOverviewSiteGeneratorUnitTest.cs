@@ -249,7 +249,6 @@ namespace Norika.MsBuild.DocumentationGenerator.Business.UnitTest
             paragraphMock.Verify(p => p.AddNewContent<IPrintableDocumentChapterStringContent>(), Times.Exactly(2));
         }
 
-
         [TestMethod]
         public void
             CreateOverview_WithTargetContainingTwoParameterDescriptionsWithSameContentAsHelpContent_ShouldAppendTwoParameterSectionsWithDescriptionInBody()

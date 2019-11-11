@@ -36,12 +36,10 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
         /// </summary>
         private readonly PrintableDocument<T> _printableDocumentBuilder;
 
-
         /// <summary>
         /// <inheritdoc cref="_outputDocument"/>
         /// </summary>
         internal IPrintableDocument OutputDocument => _outputDocument;
-
 
         /// <summary>
         /// Constructor
@@ -56,7 +54,6 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
 
             _outputDocument = CreateOutputDocument(file, _printableDocumentBuilder);
         }
-
 
         /// <summary>
         /// Constructor
@@ -73,7 +70,6 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
             _outputDocument = CreateOutputDocument(file, _printableDocumentBuilder);
         }
 
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -86,7 +82,6 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
 
             _printableDocumentBuilder = formattableDocumentBuilder;
         }
-
 
         /// <summary>
         /// Constructor
@@ -101,7 +96,6 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
             _outputDocument = CreateOutputDocument(file, _printableDocumentBuilder);
         }
 
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -115,7 +109,6 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
             _outputDocument = CreateOutputDocument(file, _printableDocumentBuilder);
         }
 
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -127,7 +120,6 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
             _msBuildProject = LoadMsBuildProject(file);
             _outputDocument = CreateOutputDocument(file, _printableDocumentBuilder);
         }
-
 
         /// <summary>
         /// Creates the documentations body content
@@ -153,7 +145,6 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
             }
         }
 
-
         /// <summary>
         /// <inheritdoc cref="IPrintableDocument.Print"/>
         /// </summary>
@@ -162,7 +153,6 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
         {
             return _outputDocument.Print();
         }
-
 
         /// <summary>
         /// Loads the content as MSBuild project from the given file
@@ -174,7 +164,6 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
             return MsBuildProjectFile.LoadContent(file.ReadAllText());
         }
 
-
         /// <summary>
         /// Creates the output file from the document builder for the given generic type. 
         /// </summary>
@@ -185,7 +174,6 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
         {
             return printableDocument.Create(file.FileName);
         }
-
 
         /// <summary>
         /// Appends a section to the documentation body containing all information about
@@ -215,7 +203,6 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
             }
         }
 
-
         /// <summary>
         /// Creates a hyperlink to a dedicated overview file representing the target target located
         /// in a sub directory of the destination documentation directory.
@@ -237,7 +224,6 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
 
             return paragraphHyperLink;
         }
-
 
         /// <summary>
         /// Appends a section to the documentation body containing all information about
@@ -266,7 +252,6 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
                     property.Condition);
         }
 
-
         /// <summary>
         /// Appends a section to the documentation body containing all information about
         /// the given properties. Only properties are considered that are settable from
@@ -293,7 +278,6 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
                     string.Join(Environment.NewLine, GetPropertySynopsisOrDescription(property)?.Content),
                     property.Condition);
         }
-
 
         /// <summary>
         /// Returns synopsis of the given MsBuild element. When no synopsis is defined it returns the
