@@ -15,7 +15,7 @@ variables:
   buildConfiguration: 'Release'
   runSettings: 'Settings/UnitTest.runsettings'
   rootNameSpace: 'Norika.MsBuild.DocumentationGenerator'
-  packgeVersion: "0.1.0-alpha$(Build.BuildId)"
+  packgeVersion: "0.1.1-alpha$(Build.BuildNumber)"
 
 steps:
 - task: NuGetToolInstaller@1
