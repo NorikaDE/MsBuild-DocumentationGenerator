@@ -6,10 +6,19 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="log4net" Version="2.0.8" />
         <PackageReference Include="Norika.Documentation.Core" Version="0.1.0-alpha*" />
         <PackageReference Include="Norika.Documentation.Core.Types" Version="0.1.0-alpha*" />
         <PackageReference Include="Norika.MsBuild.Core.Data" Version="0.1.0-alpha*" />
         <PackageReference Include="Norika.MsBuild.Model" Version="0.1.0-alpha*" />
     </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\Build\NuGet\Versioning.props">
+            <Link>Versioning/Versioning.props</Link>
+        </None>
+    </ItemGroup>
+
+    <Import Project="$(MsBuildThisFileDirectory)/../../Build/NuGet/Versioning.props" />
 
 </Project>

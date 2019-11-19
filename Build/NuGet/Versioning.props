@@ -1,0 +1,16 @@
+<Project>
+  
+  <PropertyGroup>
+    <SnapshotPackageVersion>$([System.DateTime]::Now.ToString('yyyyMMdd'))</SnapshotPackageVersion>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <Authors>NorikaDE</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/NorikaDE/Coded-Documents</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <Copyright>Copyright (c) 2019 NorikaDE</Copyright>
+    <PackageIconUrl>https://raw.githubusercontent.com/NorikaDE/Resources/master/Icons/Generic/norikaDE.png</PackageIconUrl>
+  </PropertyGroup>
+  
+</Project>
