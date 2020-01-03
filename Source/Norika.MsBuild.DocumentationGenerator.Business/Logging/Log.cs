@@ -19,6 +19,14 @@ namespace Norika.MsBuild.DocumentationGenerator.Business.Logging
             }
         }
 
+        public static void WriteDebug(string message, params object[] args)
+        {
+            foreach (IApplicationLogger logger in RegisteredLoggers)
+            {
+                logger.WriteDebug(message, args);
+            }
+        }
+        
         public static void WriteLine(string message, params object[] args)
         {
             foreach (IApplicationLogger logger in RegisteredLoggers)

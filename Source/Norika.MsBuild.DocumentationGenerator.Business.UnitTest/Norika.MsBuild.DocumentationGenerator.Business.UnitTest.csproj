@@ -8,15 +8,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1"/>
-        <PackageReference Include="Moq" Version="4.13.0"/>
-        <PackageReference Include="MSTest.TestAdapter" Version="1.4.0"/>
-        <PackageReference Include="MSTest.TestFramework" Version="1.4.0"/>
-        <PackageReference Include="Norika.Documentation.Markdown" Version="0.1.0-alpha*"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
+        <PackageReference Include="Moq" Version="4.13.0" />
+        <PackageReference Include="MSTest.TestAdapter" Version="1.4.0" />
+        <PackageReference Include="MSTest.TestFramework" Version="1.4.0" />
+        <PackageReference Include="Norika.Documentation.Markdown" Version="0.1.0-alpha*" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Norika.MsBuild.DocumentationGenerator.Business\Norika.MsBuild.DocumentationGenerator.Business.csproj"/>
+        <ProjectReference Include="..\Norika.MsBuild.DocumentationGenerator.Business\Norika.MsBuild.DocumentationGenerator.Business.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -26,7 +26,7 @@
         <EmbeddedResource Include="TestData\TargetOnlyProjectFile.xml">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
-        <None Remove="TestData\TestFile.xml"/>
+        <None Remove="TestData\TestFile.xml" />
         <EmbeddedResource Include="TestData\PropertyOnlyProjectFile.xml">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>

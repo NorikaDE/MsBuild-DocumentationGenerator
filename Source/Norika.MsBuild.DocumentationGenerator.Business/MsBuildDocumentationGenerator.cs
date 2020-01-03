@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Norika.Documentation.Core;
 using Norika.Documentation.Core.Types;
 using Norika.MsBuild.Core.Data;
 using Norika.MsBuild.DocumentationGenerator.Business.IO;
 using Norika.MsBuild.DocumentationGenerator.Business.IO.Interfaces;
+using Norika.MsBuild.DocumentationGenerator.Business.Logging;
 using Norika.MsBuild.Model.Interfaces;
 
 namespace Norika.MsBuild.DocumentationGenerator.Business
@@ -39,6 +41,16 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
         /// <summary>
         /// Constructor
         /// </summary>
+        /// <param name="filePath">Path of the file for which the documentation should be created</param>
+        /// <param name="printableDocument">The printable document</param>
+        public MsBuildDocumentationGenerator(string filePath, PrintableDocument<T> printableDocument) : this(filePath)
+        {
+            _printableDocument = printableDocument;
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public MsBuildDocumentationGenerator()
         {
             _printableDocument = new PrintableDocument<T>();
@@ -62,7 +74,7 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
         {
             PrepareOutputDirectory(outputPath);
 
-            IFile file = FileSystem.GetFileInformation(_filePath);
+            IFile file = FileSystem.Accessor.GetFile(_filePath);
             IMsBuildProject msBuildProject = MsBuildProjectFile.LoadContent(file.ReadAllText());
 
             CreateProjectOverview(msBuildProject, file, outputPath);
@@ -143,15 +155,21 @@ namespace Norika.MsBuild.DocumentationGenerator.Business
         /// Prepares the output directory for the documentation.
         /// </summary>
         /// <param name="outputPath">Directory to prepare</param>
-        /// Todo: Use IFileSystem for encapsulating dependencies
         private static void PrepareOutputDirectory(string outputPath)
         {
-            if (!Directory.Exists(outputPath))
-                Directory.CreateDirectory(outputPath);
-            else
+            try
             {
-                Directory.Delete(outputPath, true);
-                Directory.CreateDirectory(outputPath);
+                if (FileSystem.Accessor.Exists(outputPath))
+                    FileSystem.Accessor.DeleteDirectory(outputPath);
+            }
+            catch (IOException ex)
+            {
+                Log.WriteError(ex);
+                Task.Delay(100).Wait();
+            }
+            finally
+            {
+                FileSystem.Accessor.CreateDirectory(outputPath);
             }
         }
     }
