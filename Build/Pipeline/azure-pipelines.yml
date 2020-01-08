@@ -21,6 +21,14 @@ steps:
 - task: NuGetToolInstaller@1
   displayName: Install NuGet Tools
 
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'SonarCloud'
+    organization: 'norikade'
+    scannerMode: 'MSBuild'
+    projectKey: 'NorikaDE_MsBuild-DocumentationGenerator'
+    projectName: 'MsBuild-DocumentationGenerator'
+
 - task: NuGetCommand@2
   displayName: Restoring NuGet Packages
   inputs:
@@ -49,6 +57,12 @@ steps:
     command: test
     projects: '**/*UnitTest/*.csproj'
     arguments: '--configuration $(buildConfiguration) --collect "Code coverage" --settings "$(runSettings)"'
+
+- task: SonarCloudAnalyze@1
+
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '300'
 
 - task: DotNetCoreCLI@2
   displayName: Pack NuGet Packages
