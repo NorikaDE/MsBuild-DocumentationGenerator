@@ -6,6 +6,7 @@ using Moq;
 using Norika.Documentation.Core;
 using Norika.Documentation.Core.Types;
 using Norika.Documentation.Markdown.Container.Interfaces;
+using Norika.MsBuild.DocumentationGenerator.Business.UnitTest.TestTypes;
 using Norika.MsBuild.Model.Interfaces;
 
 namespace Norika.MsBuild.DocumentationGenerator.Business.UnitTest
@@ -13,6 +14,349 @@ namespace Norika.MsBuild.DocumentationGenerator.Business.UnitTest
     [TestClass]
     public class TargetOverviewSiteGeneratorUnitTest
     {
+        [TestMethod]
+        public void
+            CreateOverview_WithTargetContainingErrorHandling_ShouldInitializeChapterContentContainingNameOfTheOnErrorTarget()
+        {
+            IList<string> onErrorTargets = new List<string>() {"OnErrorTarget"};
+
+            Mock<IMsBuildTarget> targetMock = new Mock<IMsBuildTarget>();
+            Mock<IPrintableDocumentChapter> chapterMock = new Mock<IPrintableDocumentChapter>();
+            Mock<IPrintableDocumentChapterStringContent> chapterStringMock =
+                new Mock<IPrintableDocumentChapterStringContent>();
+            Mock<ITestPrintable> testPrintableMock = new Mock<ITestPrintable>();
+            Mock<IMsBuildElementHelp> helpMock = new Mock<IMsBuildElementHelp>();
+
+            chapterMock.Setup(cm => cm.AddNewContent<IPrintableDocumentChapterStringContent>())
+                .Returns(chapterStringMock.Object);
+
+            chapterStringMock.SetupAllProperties();
+
+            testPrintableMock.Setup(tpm => tpm.AddNewChapter(It.Is<string>(s => s == "Error Handling")))
+                .Returns(chapterMock.Object);
+
+            targetMock.Setup(tm => tm.Name).Returns("TargetA");
+            targetMock.Setup(tm => tm.Help).Returns(helpMock.Object);
+            targetMock.Setup(tm => tm.HasTargetDependencies).Returns(false);
+            targetMock.Setup(tm => tm.AfterTargets).Returns(new List<string>());
+            targetMock.Setup(tm => tm.BeforeTargets).Returns(new List<string>());
+            targetMock.Setup(tm => tm.DependsOnTargets).Returns(new List<string>());
+            targetMock.Setup(tm => tm.OnErrorTargets).Returns(onErrorTargets);
+
+            Mock<PrintableDocument<ITestPrintable>> printableDocumentMock =
+                new Mock<PrintableDocument<ITestPrintable>>();
+            printableDocumentMock.Setup(pdm => pdm.Create(It.IsAny<string>())).Returns(testPrintableMock.Object);
+
+            TargetOverviewSiteGenerator<ITestPrintable> targetOverviewSiteGenerator =
+                new TargetOverviewSiteGenerator<ITestPrintable>(printableDocumentMock.Object);
+
+            IPrintableDocument printableDocument = targetOverviewSiteGenerator.CreateOverview(targetMock.Object);
+
+            Assert.IsTrue(chapterStringMock.Object.Content.Contains("OnErrorTarget"));
+        }
+
+        [TestMethod]
+        public void
+            CreateOverview_WithTargetDependingOnTwoOtherTargets_ShouldAddBothTargetsToTheTableWithCorrectDependencyType()
+        {
+            IList<string> dependsOnTargetList = new List<string>() {"TargetB", "TargetC"};
+
+            Mock<IMsBuildTarget> targetMock = new Mock<IMsBuildTarget>();
+            Mock<IPrintableDocumentChapter> chapterMock = new Mock<IPrintableDocumentChapter>();
+            Mock<IPrintableParagraphTable> tableMock = new Mock<IPrintableParagraphTable>();
+            Mock<ITestPrintable> testPrintableMock = new Mock<ITestPrintable>();
+            Mock<IMsBuildElementHelp> helpMock = new Mock<IMsBuildElementHelp>();
+
+            chapterMock.Setup(cm => cm.AddNewContent<IPrintableParagraphTable>()).Returns(tableMock.Object);
+            testPrintableMock.Setup(tpm => tpm.AddNewChapter(It.Is<string>(s => s == "Target Dependencies")))
+                .Returns(chapterMock.Object);
+
+            tableMock.Setup(tm => tm.WithHeaders(
+                    It.Is<string>(s => s == "Target"),
+                    It.Is<string>(s => s == "Dependency Type"),
+                    It.Is<string>(s => s == "Dependency Description")))
+                .Returns(tableMock.Object);
+
+            targetMock.Setup(tm => tm.DependsOnTargets).Returns(dependsOnTargetList);
+            targetMock.Setup(tm => tm.Name).Returns("TargetA");
+            targetMock.Setup(tm => tm.Help).Returns(helpMock.Object);
+            targetMock.Setup(tm => tm.HasTargetDependencies).Returns(true);
+            targetMock.Setup(tm => tm.AfterTargets).Returns(new List<string>());
+            targetMock.Setup(tm => tm.BeforeTargets).Returns(new List<string>());
+
+            Mock<PrintableDocument<ITestPrintable>> printableDocumentMock =
+                new Mock<PrintableDocument<ITestPrintable>>();
+            printableDocumentMock.Setup(pdm => pdm.Create(It.IsAny<string>())).Returns(testPrintableMock.Object);
+
+            TargetOverviewSiteGenerator<ITestPrintable> targetOverviewSiteGenerator =
+                new TargetOverviewSiteGenerator<ITestPrintable>(printableDocumentMock.Object);
+
+            IPrintableDocument printableDocument = targetOverviewSiteGenerator.CreateOverview(targetMock.Object);
+
+            tableMock.Verify(tm => tm.WithRow(
+                    It.Is<string>(s => s == "TargetB"),
+                    It.Is<string>(s => s == "DependsOnTargets"),
+                    It.IsAny<string>()),
+                Times.Exactly(1));
+
+            tableMock.Verify(tm => tm.WithRow(
+                    It.Is<string>(s => s == "TargetC"),
+                    It.Is<string>(s => s == "DependsOnTargets"),
+                    It.IsAny<string>()),
+                Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void
+            CreateOverview_WithTargetExecutedBeforeTwoOtherTargets_ShouldAddBothTargetsToTheTableWithCorrectDependencyType()
+        {
+            IList<string> beforeTargets = new List<string>() {"TargetB", "TargetC"};
+
+            Mock<IMsBuildTarget> targetMock = new Mock<IMsBuildTarget>();
+            Mock<IPrintableDocumentChapter> chapterMock = new Mock<IPrintableDocumentChapter>();
+            Mock<IPrintableParagraphTable> tableMock = new Mock<IPrintableParagraphTable>();
+            Mock<ITestPrintable> testPrintableMock = new Mock<ITestPrintable>();
+            Mock<IMsBuildElementHelp> helpMock = new Mock<IMsBuildElementHelp>();
+
+            chapterMock.Setup(cm => cm.AddNewContent<IPrintableParagraphTable>()).Returns(tableMock.Object);
+            testPrintableMock.Setup(tpm => tpm.AddNewChapter(It.Is<string>(s => s == "Target Dependencies")))
+                .Returns(chapterMock.Object);
+
+            tableMock.Setup(tm => tm.WithHeaders(
+                    It.Is<string>(s => s == "Target"),
+                    It.Is<string>(s => s == "Dependency Type"),
+                    It.Is<string>(s => s == "Dependency Description")))
+                .Returns(tableMock.Object);
+
+            targetMock.Setup(tm => tm.Name).Returns("TargetA");
+            targetMock.Setup(tm => tm.Help).Returns(helpMock.Object);
+            targetMock.Setup(tm => tm.HasTargetDependencies).Returns(true);
+            targetMock.Setup(tm => tm.AfterTargets).Returns(new List<string>());
+            targetMock.Setup(tm => tm.DependsOnTargets).Returns(new List<string>());
+            targetMock.Setup(tm => tm.BeforeTargets).Returns(beforeTargets);
+
+            Mock<PrintableDocument<ITestPrintable>> printableDocumentMock =
+                new Mock<PrintableDocument<ITestPrintable>>();
+            printableDocumentMock.Setup(pdm => pdm.Create(It.IsAny<string>())).Returns(testPrintableMock.Object);
+
+            TargetOverviewSiteGenerator<ITestPrintable> targetOverviewSiteGenerator =
+                new TargetOverviewSiteGenerator<ITestPrintable>(printableDocumentMock.Object);
+
+            IPrintableDocument printableDocument = targetOverviewSiteGenerator.CreateOverview(targetMock.Object);
+
+            tableMock.Verify(tm => tm.WithRow(
+                    It.Is<string>(s => s == "TargetB"),
+                    It.Is<string>(s => s == "BeforeTargets"),
+                    It.IsAny<string>()),
+                Times.Exactly(1));
+
+            tableMock.Verify(tm => tm.WithRow(
+                    It.Is<string>(s => s == "TargetC"),
+                    It.Is<string>(s => s == "BeforeTargets"),
+                    It.IsAny<string>()),
+                Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void
+            CreateOverview_WithTargetExecutedAfterTwoOtherTargets_ShouldAddBothTargetsToTheTableWithCorrectDependencyType()
+        {
+            IList<string> afterTargets = new List<string>() {"TargetB", "TargetC"};
+
+            Mock<IMsBuildTarget> targetMock = new Mock<IMsBuildTarget>();
+            Mock<IPrintableDocumentChapter> chapterMock = new Mock<IPrintableDocumentChapter>();
+            Mock<IPrintableParagraphTable> tableMock = new Mock<IPrintableParagraphTable>();
+            Mock<ITestPrintable> testPrintableMock = new Mock<ITestPrintable>();
+            Mock<IMsBuildElementHelp> helpMock = new Mock<IMsBuildElementHelp>();
+
+            chapterMock.Setup(cm => cm.AddNewContent<IPrintableParagraphTable>()).Returns(tableMock.Object);
+            testPrintableMock.Setup(tpm => tpm.AddNewChapter(It.Is<string>(s => s == "Target Dependencies")))
+                .Returns(chapterMock.Object);
+
+            tableMock.Setup(tm => tm.WithHeaders(
+                    It.Is<string>(s => s == "Target"),
+                    It.Is<string>(s => s == "Dependency Type"),
+                    It.Is<string>(s => s == "Dependency Description")))
+                .Returns(tableMock.Object);
+
+            targetMock.Setup(tm => tm.Name).Returns("TargetA");
+            targetMock.Setup(tm => tm.Help).Returns(helpMock.Object);
+            targetMock.Setup(tm => tm.HasTargetDependencies).Returns(true);
+            targetMock.Setup(tm => tm.AfterTargets).Returns(afterTargets);
+            targetMock.Setup(tm => tm.DependsOnTargets).Returns(new List<string>());
+            targetMock.Setup(tm => tm.BeforeTargets).Returns(new List<string>());
+
+            Mock<PrintableDocument<ITestPrintable>> printableDocumentMock =
+                new Mock<PrintableDocument<ITestPrintable>>();
+            printableDocumentMock.Setup(pdm => pdm.Create(It.IsAny<string>())).Returns(testPrintableMock.Object);
+
+            TargetOverviewSiteGenerator<ITestPrintable> targetOverviewSiteGenerator =
+                new TargetOverviewSiteGenerator<ITestPrintable>(printableDocumentMock.Object);
+
+            IPrintableDocument printableDocument = targetOverviewSiteGenerator.CreateOverview(targetMock.Object);
+
+            tableMock.Verify(tm => tm.WithRow(
+                    It.Is<string>(s => s == "TargetB"),
+                    It.Is<string>(s => s == "AfterTargets"),
+                    It.IsAny<string>()),
+                Times.Exactly(1));
+
+            tableMock.Verify(tm => tm.WithRow(
+                    It.Is<string>(s => s == "TargetC"),
+                    It.Is<string>(s => s == "AfterTargets"),
+                    It.IsAny<string>()),
+                Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void CreateOverview_WithTargetDependingOnTwoOtherTargets_ShouldCreateChapterForTargetDependencies()
+        {
+            IList<string> dependsOnTargetList = new List<string>() {"TargetB", "TargetC"};
+
+            Mock<IMsBuildTarget> targetMock = new Mock<IMsBuildTarget>();
+            Mock<IPrintableDocumentChapter> chapterMock = new Mock<IPrintableDocumentChapter>();
+            Mock<IPrintableParagraphTable> tableMock = new Mock<IPrintableParagraphTable>();
+            Mock<ITestPrintable> testPrintableMock = new Mock<ITestPrintable>();
+            Mock<IMsBuildElementHelp> helpMock = new Mock<IMsBuildElementHelp>();
+
+            chapterMock.Setup(cm => cm.AddNewContent<IPrintableParagraphTable>()).Returns(tableMock.Object);
+            testPrintableMock.Setup(tpm => tpm.AddNewChapter(It.IsAny<string>()))
+                .Returns(chapterMock.Object);
+
+            tableMock.Setup(tm => tm.WithHeaders(
+                    It.Is<string>(s => s == "Target"),
+                    It.Is<string>(s => s == "Dependency Type"),
+                    It.Is<string>(s => s == "Dependency Description")))
+                .Returns(tableMock.Object);
+
+            targetMock.Setup(tm => tm.DependsOnTargets).Returns(dependsOnTargetList);
+            targetMock.Setup(tm => tm.Name).Returns("TargetA");
+            targetMock.Setup(tm => tm.Help).Returns(helpMock.Object);
+            targetMock.Setup(tm => tm.HasTargetDependencies).Returns(true);
+            targetMock.Setup(tm => tm.AfterTargets).Returns(new List<string>());
+            targetMock.Setup(tm => tm.BeforeTargets).Returns(new List<string>());
+
+            Mock<PrintableDocument<ITestPrintable>> printableDocumentMock =
+                new Mock<PrintableDocument<ITestPrintable>>();
+            printableDocumentMock.Setup(pdm => pdm.Create(It.IsAny<string>())).Returns(testPrintableMock.Object);
+
+            TargetOverviewSiteGenerator<ITestPrintable> targetOverviewSiteGenerator =
+                new TargetOverviewSiteGenerator<ITestPrintable>(printableDocumentMock.Object);
+
+            IPrintableDocument printableDocument = targetOverviewSiteGenerator.CreateOverview(targetMock.Object);
+
+            testPrintableMock.Verify(
+                tpm => tpm.AddNewChapter(It.Is<string>(s => s == "Target Dependencies")),
+                Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void CreateOverview_WithTargetContainingXmlExampleHelp_ShouldAppendContentToCreatedPrintableCodeBlock()
+        {
+            string exampleStringContent = "<TestXml>Content</TestXml>";
+
+            Mock<IMsBuildTarget> targetMock = new Mock<IMsBuildTarget>();
+            Mock<IPrintableDocumentChapter> chapterMock = new Mock<IPrintableDocumentChapter>();
+            Mock<IPrintableDocumentCodeBlock> codeBlockMock = new Mock<IPrintableDocumentCodeBlock>();
+            Mock<ITestPrintable> testPrintableMock = new Mock<ITestPrintable>();
+
+            chapterMock.Setup(cm => cm.AddNewContent<IPrintableDocumentCodeBlock>()).Returns(codeBlockMock.Object);
+            testPrintableMock.Setup(tpm => tpm.AddNewChapter(It.Is<string>(s => s == "Example")))
+                .Returns(chapterMock.Object);
+
+            IMsBuildElementHelp elementHelpMock = MsBuildTestDataBuilder.Create<IMsBuildTarget>()
+                .SetName("TargetA")
+                .WithHelp()
+                .AddHelpParagraph("EXAMPLE", exampleStringContent)
+                .Build();
+
+            targetMock.Setup(tm => tm.Help).Returns(elementHelpMock);
+
+            Mock<PrintableDocument<ITestPrintable>> printableDocumentMock =
+                new Mock<PrintableDocument<ITestPrintable>>();
+            printableDocumentMock.Setup(pdm => pdm.Create(It.IsAny<string>())).Returns(testPrintableMock.Object);
+
+            TargetOverviewSiteGenerator<ITestPrintable> targetOverviewSiteGenerator =
+                new TargetOverviewSiteGenerator<ITestPrintable>(printableDocumentMock.Object);
+
+            IPrintableDocument printableDocument = targetOverviewSiteGenerator.CreateOverview(targetMock.Object);
+
+            codeBlockMock.Verify(cbm => cbm.AppendContentLine(exampleStringContent), Times.Once);
+        }
+
+        [TestMethod]
+        public void CreateOverview_WithTargetContainingXmlExampleHelp_ShouldCallCreationForNewChapterNamedExample()
+        {
+            string exampleStringContent = "<TestXml>Content</TestXml>";
+
+            Mock<IMsBuildTarget> targetMock = new Mock<IMsBuildTarget>();
+            Mock<IPrintableDocumentChapter> chapterMock = new Mock<IPrintableDocumentChapter>();
+            Mock<IPrintableDocumentCodeBlock> codeBlockMock = new Mock<IPrintableDocumentCodeBlock>();
+            Mock<ITestPrintable> testPrintableMock = new Mock<ITestPrintable>();
+
+            chapterMock.Setup(cm => cm.AddNewContent<IPrintableDocumentCodeBlock>()).Returns(codeBlockMock.Object);
+            testPrintableMock.Setup(tpm => tpm.AddNewChapter(It.Is<string>(s => s == "Example")))
+                .Returns(chapterMock.Object);
+
+            IMsBuildElementHelp elementHelpMock = MsBuildTestDataBuilder.Create<IMsBuildTarget>()
+                .SetName("TargetA")
+                .WithHelp()
+                .AddHelpParagraph("EXAMPLE", exampleStringContent)
+                .Build();
+
+            targetMock.Setup(tm => tm.Help).Returns(elementHelpMock);
+
+            Mock<PrintableDocument<ITestPrintable>> printableDocumentMock =
+                new Mock<PrintableDocument<ITestPrintable>>();
+            printableDocumentMock.Setup(pdm => pdm.Create(It.IsAny<string>())).Returns(testPrintableMock.Object);
+
+            TargetOverviewSiteGenerator<ITestPrintable> targetOverviewSiteGenerator =
+                new TargetOverviewSiteGenerator<ITestPrintable>(printableDocumentMock.Object);
+
+            IPrintableDocument printableDocument = targetOverviewSiteGenerator.CreateOverview(targetMock.Object);
+
+            testPrintableMock.Verify(tpm => tpm.AddNewChapter(It.Is<string>(s => s == "Example")), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void
+            CreateOverview_WithTargetContainingTwoXmlExampleHelps_ShouldAppendContentToBothCreatedPrintableCodeBlock()
+        {
+            string exampleStringContentOne = "<TestXml>Content</TestXml>";
+            string exampleStringContentTwo = "<TestXml>AnotherContent</TestXml>";
+
+            Mock<IMsBuildTarget> targetMock = new Mock<IMsBuildTarget>();
+            Mock<IPrintableDocumentChapter> chapterMock = new Mock<IPrintableDocumentChapter>();
+            Mock<IPrintableDocumentCodeBlock> codeBlockMock = new Mock<IPrintableDocumentCodeBlock>();
+            Mock<ITestPrintable> testPrintableMock = new Mock<ITestPrintable>();
+
+            chapterMock.Setup(cm => cm.AddNewContent<IPrintableDocumentCodeBlock>()).Returns(codeBlockMock.Object);
+            testPrintableMock.Setup(tpm => tpm.AddNewChapter(It.Is<string>(s => s == "Example")))
+                .Returns(chapterMock.Object);
+
+            IMsBuildElementHelp elementHelpMock = MsBuildTestDataBuilder.Create<IMsBuildTarget>()
+                .SetName("TargetA")
+                .WithHelp()
+                .AddHelpParagraph("EXAMPLE", exampleStringContentOne)
+                .AddHelpParagraph("EXAMPLE", exampleStringContentTwo)
+                .Build();
+
+            targetMock.Setup(tm => tm.Help).Returns(elementHelpMock);
+
+            Mock<PrintableDocument<ITestPrintable>> printableDocumentMock =
+                new Mock<PrintableDocument<ITestPrintable>>();
+            printableDocumentMock.Setup(pdm => pdm.Create(It.IsAny<string>())).Returns(testPrintableMock.Object);
+
+            TargetOverviewSiteGenerator<ITestPrintable> targetOverviewSiteGenerator =
+                new TargetOverviewSiteGenerator<ITestPrintable>(printableDocumentMock.Object);
+
+            IPrintableDocument printableDocument = targetOverviewSiteGenerator.CreateOverview(targetMock.Object);
+
+            codeBlockMock.Verify(cbm => cbm.AppendContentLine(It.IsAny<string>()), Times.Exactly(2));
+            codeBlockMock.Verify(cbm => cbm.AppendContentLine(exampleStringContentOne), Times.Once);
+            codeBlockMock.Verify(cbm => cbm.AppendContentLine(exampleStringContentTwo), Times.Once);
+        }
+
         [TestMethod]
         public void
             CreateOverview_WithOneProperlyNamedTarget_ShouldCallCreationOfNewDocumentWithTitleMatchingTheTargetName()
