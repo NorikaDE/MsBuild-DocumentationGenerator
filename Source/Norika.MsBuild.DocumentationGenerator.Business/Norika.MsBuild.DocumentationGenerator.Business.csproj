@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="log4net" Version="2.0.8" />
+        <PackageReference Include="log4net" Version="2.0.10" />
         <PackageReference Include="Norika.Documentation.Core" Version="0.1.0-alpha*" />
         <PackageReference Include="Norika.Documentation.Core.Types" Version="0.1.0-alpha*" />
         <PackageReference Include="Norika.MsBuild.Core.Data" Version="0.1.0-alpha*" />
